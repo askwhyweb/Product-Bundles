@@ -1,0 +1,69 @@
+<?php
+$_helper = $this->helper('OrviSoft\ProductBundles\Helper\Data');
+$_imageHelper = $this->helper('\Magento\Catalog\Helper\Image');
+
+$activeBundles = $_helper->getActiveBundles();
+if(!$activeBundles || $activeBundles->count() == 0){
+    return;
+}
+?>
+<div class="product-bundle-buy col-md-12 col-sm-12 col-xs-12">
+    <div class="bundle-title">
+        <h2><?php echo __('Buy Together and Save'); ?></h2>
+    </div>
+    <div class="bundle-contents">
+<?php 
+$bundleData = $activeBundles->getData();
+foreach($bundleData as $key => $bundle):
+?>
+        <div class="bundle-group">
+            <div class="bundle-label">
+                <h3>
+                    <?php echo __($bundle['Label']); ?>
+                </h3>
+            </div>
+            <div cass="bundle-data">
+<?php
+$bundleProductSku = $bundle['Products'];
+$skuList = explode(PHP_EOL, $bundleProductSku); // this will explode bundle skus by each line break.
+
+foreach($skuList as $key => $skus):
+$bundleProducts = $_helper->loadProductsBySku($skus);
+if(!$bundleProducts->count()){
+    continue 1;
+}
+$price = 0;
+$save = 0;
+$productIDs[]=$_helper->getProduct()->getId();
+
+?>
+                <div class="bundle-offer">
+                    <div class="bundle-offer products">
+                        <?php foreach($bundleProducts as $_product): $price = $price + $_product->getPrice(); $productIDs[]=$_product->getId(); ?>
+                        <div class="bundle-offer item">
+                            <a class="bundle-offer product-link" href="/">
+                            <div class="product-image">
+                                <a href="<?php echo $_product->getProductUrl(); ?>"><img class="porto-lazyload"
+                                        data-src="<?php echo $_imageHelper->init($_product, 'product_base_image')->setImageFile($_product->getSmallImage())->resize(380)->getUrl(); ?>" /></a>
+                            </div>
+                            </a>
+                            <p class="bundle-offer product-title"><a href="<?php echo $_product->getProductUrl(); ?>"><?php echo $_product->getName(); ?></a></p>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="bundle-offer purchase-info">
+                        <p class="price"><span class="final-price-box"><?php echo $price; ?></span> <span class="saving">save <?php echo $save; ?></span></p>
+                        <form method="post" action="/">
+<?php foreach($productIDs as $id): ?>
+                            <input type="hidden" name="product[]" value="<?php echo $id; ?>">
+<?php endforeach; ?>
+                            <input class="button btn-primary" type="submit" value="Add">
+                        </form>
+                    </div>
+                </div>
+<?php endforeach; ?>
+            </div>
+        </div>
+<?php endforeach; ?>
+    </div>
+</div>

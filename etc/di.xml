@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+	<preference for="OrviSoft\ProductBundles\Api\BundlesRepositoryInterface" type="OrviSoft\ProductBundles\Model\BundlesRepository"/>
+	<preference for="OrviSoft\ProductBundles\Api\Data\BundlesInterface" type="OrviSoft\ProductBundles\Model\Data\Bundles"/>
+	<preference for="OrviSoft\ProductBundles\Api\Data\BundlesSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+	<virtualType name="OrviSoft\ProductBundles\Model\ResourceModel\Bundles\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+		<arguments>
+			<argument name="mainTable" xsi:type="string">orvisoft_productbundles_bundles</argument>
+			<argument name="resourceModel" xsi:type="string">OrviSoft\ProductBundles\Model\ResourceModel\Bundles\Collection</argument>
+		</arguments>
+	</virtualType>
+	<type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+		<arguments>
+			<argument name="collections" xsi:type="array">
+				<item name="orvisoft_productbundles_bundles_listing_data_source" xsi:type="string">OrviSoft\ProductBundles\Model\ResourceModel\Bundles\Grid\Collection</item>
+			</argument>
+		</arguments>
+	</type>
+</config>
